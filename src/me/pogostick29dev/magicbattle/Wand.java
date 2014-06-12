@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public enum Wand {
 
-	FIRE("Fire", ChatColor.RED, new WandRunnable() {
+	FIRE("Fire", ChatColor.RED, new WandRunnable(), Materia.BLAZE_ROD) {
 		public void run(PlayerInteractEvent e) {
 			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
 			fb.setIsIncendiary(false);
@@ -25,7 +25,7 @@ public enum Wand {
 		}
 	}),
 	
-	POISON("Poison", ChatColor.DARK_PURPLE, new WandRunnable() {
+	POISON("Poison", ChatColor.DARK_PURPLE, new WandRunnable(), Materia.STICK) {
 		public void run(PlayerInteractEvent e) {
 			for (Entity en : e.getPlayer().getNearbyEntities(10, 10, 10)) {
 				if (en instanceof Player) {
@@ -40,8 +40,9 @@ public enum Wand {
 	private String name;
 	private ChatColor color;
 	private WandRunnable run;
+	private Material item;
 	
-	Wand(String name, ChatColor color, WandRunnable run) {
+	Wand(String name, ChatColor color, WandRunnable run, Material item) {
 		this.name = name;
 		this.color = color;
 		this.run = run;
@@ -63,8 +64,11 @@ public enum Wand {
 		run.run(e);
 	}
 	
+	public Material getItem() {
+		return item;
+	}
 	public ItemStack createItemStack() {
-		ItemStack i = new ItemStack(Material.STICK, 1);
+		ItemStack i = new ItemStack(item, 1);
 		
 		ItemMeta im = i.getItemMeta();
 		im.setDisplayName(getFullName());
