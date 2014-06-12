@@ -46,6 +46,7 @@ public enum Wand {
 		this.name = name;
 		this.color = color;
 		this.run = run;
+		this.item = item;
 	}
 	
 	public String getName() {
