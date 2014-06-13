@@ -23,7 +23,7 @@ public enum Wand {
 			fb.setIsIncendiary(false);
 			fb.setYield(0F);
 		}
-	}),
+	}
 	
 	POISON("Poison", ChatColor.DARK_PURPLE, new WandRunnable(), Materia.STICK) {
 		public void run(PlayerInteractEvent e) {
@@ -35,7 +35,40 @@ public enum Wand {
 				}
 			}
 		}
-	});
+	}
+	
+	SNOW("Snow", ChatColor.LIGHT_BLUE, new WandRunnable(), Material.DIAMOND_HOE) {
+		public void run(PlayerInteractEvent e) {
+			Player p = e.getPlayer();
+			Inventory inv = p.getInventory();
+			
+			Material sn = Material.SNOWBALL
+			if (inv.contains(sn)) {
+				int snAM = sn.getAmmount(); // <-- ammount in the inv
+				int snAF = snAM --;  // <-- ammount after being subtracted by 1 (--)
+				
+				sn.setAmmount(snAF);
+				
+				Snowball sno = p.launchProjectile(Snowball.class);
+				
+				for (Entity  snoe : e.getLocation().getNearbyEntities(10, 10, 10)) {
+					if (snoe instanceof Player) {
+						((Player) snoe).addPotionEffect(new PotionEffectType.SLOWNESS, 15, 2));
+						((Player) snoe).addPotionEffect(new PotionEffectType.BLINDNESS, 15, 2));
+						snoe.sendMessage(ChatColor.LIGHT_BLUE + "Burrrr! you were froze by " + ChatColor.RED + p);
+					}
+				}
+				for (Block blar : e.getLocation().subtract(10, 0, 10)) {
+					blar.setType(Material.ICE);
+					blar.getLocation().getWorld().playEffect(blar.getLocation(), Effect.EXTINGUISH, 10);
+				}
+				
+			}else {
+				p.sendMessage(ChatColor.RED + "Not enough ammo!");
+				p.playEffect(p.getLocation(), Sound.CLICK, 10, 1);
+			}
+		}
+	}
 	
 	private String name;
 	private ChatColor color;
